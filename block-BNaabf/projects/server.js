@@ -1,8 +1,8 @@
 var http = require("http");
-var fs = require("fs");
-let qs = require("querystring");
 
 var server = http.createServer(handlServer);
+var querystring = require("querystring");
+var fs = require("fs");
 function handlServer(req, res) {
   var store = "";
   req.on("data", (chunk) => {
@@ -14,7 +14,7 @@ function handlServer(req, res) {
       fs.createReadStream("./form.html").pipe(res);
     }
     if (req.method === "POST" && req.url === "/form") {
-      var parsedData = qs.parse(store);
+      var parsedData = querystring.parse(store);
       res.setHeader("Content-Type", "text/html");
       res.end(
         `<h2>${parsedData.name}</h2><h3>${parsedData.email}</h3><h4>${parsedData.age}</h4>`
