@@ -1,9 +1,16 @@
 var fs = require("fs");
 var path = require("path");
-var absoultePath = __dirname;
-var relative = __filename;
-var formPath = path.join(__dirname, "index.html");
-
+//capture absolute path of `server.js`(itself)
+var absoluteCurr = __filename;
+console.log(absoluteCurr);
+//get absolute path of `app.js`
+var absoulteDir = __dirname;
+console.log(absoulteDir + "/app.js");
+// get realtive path of `index.html`
+console.log("./index.html");
+//get absolute path of `index.html` using `path module`
+var absPath = path.join(__dirname, "index.html");
+console.log(absPath);
 // Captue Data
 
 var http = require("http");
@@ -16,12 +23,12 @@ function handleServer(req, res) {
   });
   req.on("end", () => {
     res.statusCode = 201;
-    if (req.method === "POST" && req.url === "/route") {
+    if (req.method === "POST" && req.url === "/") {
       console.log(store);
       res.setHeader("Content-Type", "application/json");
       res.end(store);
     }
-    if (req.method === "POST" && req.url === "/form") {
+    if (req.method === "POST" && req.url === "/") {
       var parsedData = qs.parse(store);
       res.end(JSON.stringify(parsedData.captain));
     }

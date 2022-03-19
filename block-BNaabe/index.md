@@ -38,6 +38,33 @@ Q. Follow above steps with form data from postman instead of json data.
 
 - once data has been captured, send only captain's name in response.
 
+```js
+var http = require("http");
+var qs = require("querystring");
+var server = http.createServer(handleServer);
+function handleServer(req, res) {
+  var store = "";
+  req.on("data", (chunk) => {
+    store += chunk;
+  });
+  req.on("end", () => {
+    res.statusCode = 201;
+    if (req.method === "POST" && req.url === "/") {
+      console.log(store);
+      res.setHeader("Content-Type", "application/json");
+      res.end(store);
+    }
+    if (req.method === "POST" && req.url === "/") {
+      var parsedData = qs.parse(store);
+      res.end(JSON.stringify(parsedData.captain));
+    }
+  });
+}
+server.listen(3000, () => {
+  console.log("Server started at 3K");
+});
+```
+
 Q. Create server which can handle both json/form data without specifying which format of data is being received.
 
 - add listener on port 9000
@@ -46,10 +73,41 @@ Q. Create server which can handle both json/form data without specifying which f
 - parse respective data format i.e. json/form
 - send entire data in response
 - data sent from postman should have fields:
+
   - city
   - state
   - country
   - pin
+
+  ```js
+  var http = require("http");
+  ```
+
+var qs = require("querystring");
+
+var server = http.createServer(handleServer);
+
+function handleServer(req, res) {
+var store = "";
+
+req.on("data", (chunk) => {
+store += chunk;
+});
+req.on("end", () => {
+if (req.headers["content-type"] === "application/x-www-form-urlencoded") {
+var formData = qs.parse(store);
+res.end(JSON.stringify(formData));
+}
+if (req.headers["content-type"] === "application/json") {
+res.end(store);
+}
+});
+}
+server.listen(4000, () => {
+console.log("Server started at 4K");
+});
+
+```
 
 Q. create server, send json data in request from postman, parse in on the server and send html response with entire parsed data information.
 
@@ -64,3 +122,34 @@ Q. Follow above question with form data containing fields i.e name and email.
 #### Note:-
 
 Make sure to convert objects into strings using `JSON.stringify` before passing the data through response.
+```
+
+```js
+var http = require("http");
+
+var qs = require("querystring");
+
+var server = http.createServer(handleServer);
+
+function handleServer(req, res) {
+  var store = "";
+
+  req.on("data", (chunk) => {
+    store += chunk;
+  });
+  req.on("end", () => {
+    if (req.headers["content-type"] === "application/x-www-form-urlencoded") {
+      var formData = qs.parse(store);
+      res.end(JSON.stringify(formData));
+    }
+    if (req.headers["content-type"] === "application/json") {
+      var jsonData = JSON.parse(store);
+      res.setHeader("Content-Type", "text/html");
+      res.end(`<h2>${jsonData.name}</h2><p>${jsonData.email}</p>`);
+    }
+  });
+}
+server.listen(4000, () => {
+  console.log("Server started at 4K");
+});
+```
