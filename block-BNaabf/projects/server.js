@@ -1,8 +1,8 @@
 var http = require("http");
-
-var server = http.createServer(handlServer);
 var querystring = require("querystring");
 var fs = require("fs");
+
+var server = http.createServer(handlServer);
 function handlServer(req, res) {
   var store = "";
   req.on("data", (chunk) => {
